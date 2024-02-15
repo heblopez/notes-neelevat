@@ -1,34 +1,50 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+interface INota {
+  id: number
+  body: string
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const notas = JSON.parse(localStorage.getItem("notas") || "[]")
+  const newNoteIndex = notas.length + 1
+  const [form, setForm] = useState({id: newNoteIndex, body: ""})
+
+  const handleClick = () => {
+    if (form.body.trim() === "") return
+    notas.push(form)
+    localStorage.setItem("notas", JSON.stringify(notas))
+    setForm({id: newNoteIndex+1 , body: ""})
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='bg-sky-100 p-8 rounded-md h-screen overflow-y-scroll'>
+      <h1 className='text-5xl font-extrabold m-8 bg-gradient-to-r from-purple-400 via-sky-500 to-cyan-700 bg-clip-text text-transparent'>
+        Noteable
+      </h1>
+      <div className="container">
+        <textarea name="form" cols={48} rows={3} value={form.body}
+          placeholder="Escribe tu nota aquí..."
+          className="p-4 text-lg" 
+          onChange={(e) => setForm({...form, body: e.target.value})}>
+        </textarea>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div className="p-4 font-bold mb-3">
+        <button className='bg-sky-400 hover:bg-cyan-600 text-white font-bold py-2 px-8 rounded-lg transition-colors text-xl' onClick={handleClick}>
+          Crear
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div className="flex flex-col gap-4 max-w-lg justify-center">
+        {notas.map((nota: INota) => (
+          <div key={nota.id} className='flex gap-2 p-2 bg-white items-center min-h-14 rounded-lg'>
+            <div key={nota.id} className=" w-11/12 text-xl p-4 text-pretty" >
+            {nota.body}
+            </div>
+            <button className='w-12 rounded-full h-12 hover:bg-slate-100'>🗑️</button>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
