@@ -9,6 +9,7 @@
   color: rgba(38, 34, 34, 0.89);
   padding: 0.5rem;
   box-sizing: border-box;
+  background-color: currentColor;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,7 +21,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 640px;
+  min-width: 480px;
   min-height: 100vh;
 }
 
@@ -33,4 +34,7 @@ h1 {
   max-width: 1280px;
   margin: 0 auto;
   text-align: center;
+  min-height: 100vh;
+  min-width: 480px;
+  width: 100%;
 }
