@@ -7,21 +7,23 @@ interface INota {
 
 function App() {
   const initialNotas = JSON.parse(localStorage.getItem("notas") || "[]")
-  const newNoteIndex =  initialNotas.length === 0 ? 1 : initialNotas[initialNotas.length-1].id + 1
-  const [form, setForm] = useState({id: newNoteIndex, body: ""})
   let [notas, setNotas] = useState<INota[]>(initialNotas)
+  const [form, setForm] = useState({id: 1, body: ""})
 
   const handleClick = () => {
     if (form.body.trim() === "") return
-    notas.push(form)
-    localStorage.setItem("notas", JSON.stringify(notas))
-    setForm({id: newNoteIndex+1 , body: ""})
+    const updatedNotes = [...notas, form]
+    setNotas(updatedNotes)
+    localStorage.setItem("notas", JSON.stringify(updatedNotes))
+    const nextID =  updatedNotes[updatedNotes.length-1].id + 1
+    setForm({id: nextID , body: ""})
   }
 
   const handleDelete = (id: number) => {
-    notas = notas.filter((nota: INota) => nota.id !== id)
-    setNotas(notas)
-    localStorage.setItem("notas", JSON.stringify(notas))
+    const updatedNotes = notas.filter((nota: INota) => nota.id !== id)
+    localStorage.setItem("notas", JSON.stringify(updatedNotes))
+    setNotas(updatedNotes)
+    setForm({id: updatedNotes.length > 0 ? updatedNotes[updatedNotes.length-1].id+1 : 1 , body: ""})
   }
 
   return (
